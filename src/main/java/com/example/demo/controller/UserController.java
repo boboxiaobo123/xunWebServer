@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by xhou on 2018/8/24.
  */
 
+@CrossOrigin
 @Controller
 @RequestMapping(value = "/api/v1/user")
 @Api("UserController相关api.")
@@ -36,15 +37,22 @@ public class UserController {
     @ApiOperation(value = "获取项目信息")
     @RequestMapping(value="/program", method = RequestMethod.GET)
     @ResponseBody
-    public ProgramResponse program(@RequestParam(value = "userId") String userId){
-        return userService.getProgram(userId);
+    public ProgramResponse program(@RequestParam(value = "programId") String programId){
+        return userService.getProgram(programId);
+    }
+
+    @ApiOperation(value = "获取所有项目信息")
+    @RequestMapping(value="/program/all", method = RequestMethod.GET)
+    @ResponseBody
+    public ProgramAllResponse programAll(){
+        return userService.getProgramAll();
     }
 
     @ApiOperation(value = "获取项目图片")
     @RequestMapping(value="/program/image", method = RequestMethod.GET)
     @ResponseBody
-    public ProgramImageResponse programImage(@RequestParam(value = "userId") String userId){
-        return userService.getProgramImage(userId);
+    public ProgramImageResponse programImage(@RequestParam(value ="programId") String programId){
+        return userService.getProgramImage(programId);
     }
 
     @ApiOperation(value = "获取个人投资信息")

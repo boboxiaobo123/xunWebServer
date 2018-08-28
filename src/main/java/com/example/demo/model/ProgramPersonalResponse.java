@@ -3,6 +3,8 @@ package com.example.demo.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
+
 /**
  * Created by xhou on 2018/8/25.
  */
@@ -22,6 +24,9 @@ public class ProgramPersonalResponse {
 
     @ApiModelProperty("投资结束时间")
     private String endDate;
+
+    @ApiModelProperty("项目编号")
+    private List<Integer> programIds;
 
     public int getCode() {
         return code;
@@ -61,5 +66,13 @@ public class ProgramPersonalResponse {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public List<Integer> getProgramIds() {
+        return programIds;
+    }
+
+    public void setProgramIds(List<Integer> programIds) {
+        this.programIds = programIds;
     }
 }

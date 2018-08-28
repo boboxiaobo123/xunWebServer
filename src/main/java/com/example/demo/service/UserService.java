@@ -60,17 +60,33 @@ public class UserService {
         return loginResponse;
     }
 
-    public ProgramResponse getProgram(String userId){
+    public ProgramAllResponse getProgramAll(){
+        ProgramAllResponse programAllResponse = new ProgramAllResponse();
+        List<ProgramDao> list = new ArrayList<>();
+        try{
+            List<ProgramDao> programDaoList = programRepository.findAll();
+            if(0==programDaoList.size()){
+                programAllResponse.setCode(1007);
+                programAllResponse.setMessage("没有任何项目");
+                return programAllResponse;
+            }
+            for(int i=0; i< programDaoList.size(); i++){
+                ProgramDao programDao = programDaoList.get(i);
+                list.add(programDao);
+            }
+            programAllResponse.setCode(200);
+            programAllResponse.setMessage("成功");
+            programAllResponse.setProgramDaoList(list);
+        }catch(Exception e){
+            throw e;
+            }
+        return programAllResponse;
+    }
+
+    public ProgramResponse getProgram(String programId){
         ProgramResponse programResponse = new ProgramResponse();
         try{
-            List<InvestmentDao> investmentDao = investmentRepository.findByUserIdAndStatus(Integer.valueOf(userId),0);
-        if(0==investmentDao.size()){
-            programResponse.setCode(1003);
-            programResponse.setMessage("通过userID没有找到投资项目");
-            return programResponse;
-        }else{
-            int programId = investmentDao.get(0).getProgramId();
-            ProgramDao programDao = programRepository.findByProgramId(programId);
+            ProgramDao programDao = programRepository.findByProgramId(Integer.valueOf(programId));
             if(null==programDao){
                 programResponse.setCode(1004);
                 programResponse.setMessage("通过programId没有找到项目");
@@ -83,38 +99,29 @@ public class UserService {
             programResponse.setOwner(programDao.getOwner());
             programResponse.setProgramName(programDao.getProgramName());
             programResponse.setProgramRateReturn(programDao.getProgramRateReturn());
-        }
-    }catch(Exception e){
+        }catch(Exception e){
             throw e;
         }
         return programResponse;
     }
 
-    public ProgramImageResponse getProgramImage(String userId){
+    public ProgramImageResponse getProgramImage(String programId){
         ProgramImageResponse programImageResponse = new ProgramImageResponse();
         try{
-            List<InvestmentDao> investmentDao = investmentRepository.findByUserIdAndStatus(Integer.valueOf(userId),0);
-            if(0==investmentDao.size()){
-                programImageResponse.setCode(1003);
-                programImageResponse.setMessage("通过userID没有找到投资项目");
+            List<ImageDao> imageList = imageRepository.findByProgramId(Integer.valueOf(programId));
+            if (0==imageList.size()) {
+                programImageResponse.setCode(1005);
+                programImageResponse.setMessage("该项目没有图片");
                 return programImageResponse;
-            }else {
-                int programId = investmentDao.get(0).getProgramId();
-                List<ImageDao> imageList = imageRepository.findByProgramId(programId);
-                if (null == imageList) {
-                    programImageResponse.setCode(1005);
-                    programImageResponse.setMessage("该项目没有图片");
-                    return programImageResponse;
-                } else {
-                    List<String> list = new ArrayList<>();
-                    for (int i = 0; i < imageList.size(); i++) {
-                        String imageLocation = imageList.get(i).getImage();
-                        list.add(imageLocation);
-                    }
-                    programImageResponse.setCode(200);
-                    programImageResponse.setMessage("成功");
-                    programImageResponse.setImages(list);
+            } else {
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < imageList.size(); i++) {
+                    String imageLocation = imageList.get(i).getImage();
+                    list.add(imageLocation);
                 }
+                programImageResponse.setCode(200);
+                programImageResponse.setMessage("成功");
+                programImageResponse.setImages(list);
             }
         }catch(Exception e){
             throw e;
@@ -128,7 +135,7 @@ public class UserService {
             List<InvestmentDao> investmentDao=investmentRepository.findByUserIdAndStatus(Integer.valueOf(userId),0);
             if(0==investmentDao.size()){
                 programPersonalResponse.setCode(1003);
-                programPersonalResponse.setMessage("通过programId没有找到项目");
+                programPersonalResponse.setMessage("本期没有参与任何项目");
                 return programPersonalResponse;
             }else{
                 programPersonalResponse.setCode(200);
@@ -136,6 +143,12 @@ public class UserService {
                 programPersonalResponse.setSubscription(investmentDao.get(0).getSubscription());
                 programPersonalResponse.setStartDate(investmentDao.get(0).getStartDate());
                 programPersonalResponse.setEndDate(investmentDao.get(0).getEndDate());
+                List<Integer> list = new ArrayList<>();
+                for(int i=0; i<investmentDao.size();i++){
+                    Integer programId = investmentDao.get(i).getProgramId();
+                    list.add(programId);
+                }
+                programPersonalResponse.setProgramIds(list);
             }
         }catch(Exception e){
             throw e;
