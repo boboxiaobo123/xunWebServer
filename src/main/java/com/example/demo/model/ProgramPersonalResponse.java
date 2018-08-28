@@ -17,7 +17,7 @@ public class ProgramPersonalResponse {
     private String message;
 
     @ApiModelProperty("认购金额")
-    private int subscription;
+    private String subscription;
 
     @ApiModelProperty("投资开始时间")
     private String startDate;
@@ -44,11 +44,11 @@ public class ProgramPersonalResponse {
         this.message = message;
     }
 
-    public int getSubscription() {
+    public String getSubscription() {
         return subscription;
     }
 
-    public void setSubscription(int subscription) {
+    public void setSubscription(String subscription) {
         this.subscription = subscription;
     }
 

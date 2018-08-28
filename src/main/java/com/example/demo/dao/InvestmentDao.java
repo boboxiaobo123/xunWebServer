@@ -21,7 +21,7 @@ public class InvestmentDao {
     private int programId;
 
     @Column
-    private int subscription;
+    private String subscription;
 
     @Column
     private String startDate;
@@ -62,11 +62,11 @@ public class InvestmentDao {
         this.programId = programId;
     }
 
-    public int getSubscription() {
+    public String getSubscription() {
         return subscription;
     }
 
-    public void setSubscription(int subscription) {
+    public void setSubscription(String subscription) {
         this.subscription = subscription;
     }
 
